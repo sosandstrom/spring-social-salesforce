@@ -27,14 +27,14 @@ public class SalesforceAdapter implements ApiAdapter<Salesforce> {
 
     @Override
     public void setConnectionValues(Salesforce salesforce, ConnectionValues cv) {
-        SalesforceProfile profile = salesforce.meetrOperations().getUserProfile();
+        SalesforceProfile profile = salesforce.basicOperations().getUserProfile();
         cv.setDisplayName(profile.getName());
         cv.setProviderUserId(profile.getId());
     }
 
     @Override
     public UserProfile fetchUserProfile(Salesforce salesforce) {
-        SalesforceProfile profile = salesforce.meetrOperations().getUserProfile();
+        SalesforceProfile profile = salesforce.basicOperations().getUserProfile();
         final UserProfileBuilder BUILDER = new UserProfileBuilder();
         return BUILDER
                 .setUsername(profile.getId())

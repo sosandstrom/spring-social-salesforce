@@ -5,31 +5,24 @@
 package org.springframework.social.salesforce.api;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
  * @author sosandstrom
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SalesforceProfile extends SalesforceAttributes {
-    private String id;
+public class SalesforceContact extends SalesforceObject {
     private String email;
     private String name;
     private String firstName;
     private String lastName;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-    
     public String getEmail() {
         return email;
     }
 
+    @JsonProperty("Email")
     public void setEmail(String email) {
         this.email = email;
     }
@@ -38,6 +31,7 @@ public class SalesforceProfile extends SalesforceAttributes {
         return name;
     }
 
+    @JsonProperty("Name")
     public void setName(String name) {
         this.name = name;
     }
@@ -46,6 +40,7 @@ public class SalesforceProfile extends SalesforceAttributes {
         return firstName;
     }
 
+    @JsonProperty("FirstName")
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -54,8 +49,8 @@ public class SalesforceProfile extends SalesforceAttributes {
         return lastName;
     }
 
+    @JsonProperty("LastName")
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
 }
