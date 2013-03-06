@@ -93,7 +93,7 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding
         QueryEmailServicesAddressResponse response = getRestTemplate().getForObject(url, QueryEmailServicesAddressResponse.class, soql);
         for (SalesforceEmailServicesAddress sesa : response.getRecords()) {
             if (null != sesa.getEmailDomainName()) {
-                return sesa.getEmailDomainName();
+                return String.format("emailtosalesforce@%s", sesa.getEmailDomainName());
             }
         }
         return null;
