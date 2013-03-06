@@ -14,6 +14,7 @@ import org.springframework.social.salesforce.api.BasicOperations;
 import org.springframework.social.salesforce.api.Salesforce;
 import org.springframework.social.salesforce.api.SalesforceAccount;
 import org.springframework.social.salesforce.api.SalesforceContact;
+import org.springframework.social.salesforce.api.SalesforceEmailServicesAddress;
 import org.springframework.social.salesforce.api.SalesforceProfile;
 
 /**
@@ -80,6 +81,22 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding
         LOG.debug("SOQL: {}", soql);
         QueryContactsResponse response = getRestTemplate().getForObject(url, QueryContactsResponse.class, soql);
         return response.getRecords();
+    }
+
+    @Override
+    public String getEmail2SalesforceAddress() {
+        SalesforceProfile me = getUserProfile();
+        final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
+        String soql = String.format("SELECT Id,EmailDomainName FROM EmailServicesAddress WHERE LocalPart='emailtosalesforce' AND AuthorizedSenders='%s'",
+                me.getEmail());
+        LOG.debug("SOQL: {}", soql);
+        QueryEmailServicesAddressResponse response = getRestTemplate().getForObject(url, QueryEmailServicesAddressResponse.class, soql);
+        for (SalesforceEmailServicesAddress sesa : response.getRecords()) {
+            if (null != sesa.getEmailDomainName()) {
+                return sesa.getEmailDomainName();
+            }
+        }
+        return null;
     }
 
     @Override

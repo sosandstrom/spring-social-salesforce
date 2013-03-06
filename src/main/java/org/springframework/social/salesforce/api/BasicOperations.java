@@ -16,4 +16,5 @@ public interface BasicOperations {
     
     SalesforceProfile getUserProfile();
 
+    String getEmail2SalesforceAddress();
 }
