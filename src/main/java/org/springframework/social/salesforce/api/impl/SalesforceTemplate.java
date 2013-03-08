@@ -6,6 +6,7 @@ package org.springframework.social.salesforce.api.impl;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -18,22 +19,21 @@ import org.springframework.social.salesforce.api.SalesforceEmailServicesAddress;
 import org.springframework.social.salesforce.api.SalesforceProfile;
 
 /**
- *
+ * 
  * @author sosandstrom
  */
-public class SalesforceTemplate extends AbstractOAuth2ApiBinding 
-        implements Salesforce, BasicOperations {
-    
-    public static final String VERSION_24 = "v24.0";
-    public static final String VERSION = VERSION_24;
-    
+public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Salesforce, BasicOperations {
+
+    public static final String  VERSION_24       = "v24.0";
+    public static final String  VERSION          = VERSION_24;
+
     private static final String INSTANCE_URL_NA1 = "https://na1.salesforce.com";
-    protected final String FIELDS_CONTACT = "Id,Email,Name,FirstName,LastName";
-    protected final String FIELDS_ACCOUNT = "Id,Name,Phone,ShippingCity,ShippingCountry,ShippingPostalCode,ShippingState,ShippingStreet";
-    
-    static final Logger LOG = LoggerFactory.getLogger(SalesforceTemplate.class);
-    
-    private String instanceUrl;
+    protected final String      FIELDS_CONTACT   = "Id,Email,Name,FirstName,LastName,Phone,MobilePhone,MailingStreet,MailingCity,MailingState,MailingPostalCode,MailingCountry";
+    protected final String      FIELDS_ACCOUNT   = "Id,Name,Phone,ShippingCity,ShippingCountry,ShippingPostalCode,ShippingState,ShippingStreet";
+
+    static final Logger         LOG              = LoggerFactory.getLogger(SalesforceTemplate.class);
+
+    private String              instanceUrl;
 
     @Override
     public BasicOperations basicOperations() {
@@ -56,7 +56,7 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding
         });
         this.instanceUrl = instanceUrl;
     }
-    
+
     @Override
     public Iterable<SalesforceAccount> getAccounts(int pageSize, String cursorKey) {
         final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
@@ -87,11 +87,13 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding
     public String getEmail2SalesforceAddress() {
         SalesforceProfile me = getUserProfile();
         final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
-        String soql = String.format("SELECT Id,EmailDomainName FROM EmailServicesAddress WHERE LocalPart='emailtosalesforce' AND AuthorizedSenders='%s'",
-                me.getEmail());
+        String soql = String
+                .format("SELECT Id,EmailDomainName FROM EmailServicesAddress WHERE LocalPart='emailtosalesforce' AND AuthorizedSenders='%s'",
+                        me.getEmail());
         LOG.debug("Email: {}, SOQL: {}", me.getEmail(), soql);
-        QueryEmailServicesAddressResponse response = getRestTemplate().getForObject(url, QueryEmailServicesAddressResponse.class, soql);
-        for (SalesforceEmailServicesAddress sesa : response.getRecords()) {
+        QueryEmailServicesAddressResponse response = getRestTemplate().getForObject(url, QueryEmailServicesAddressResponse.class,
+                soql);
+        for(SalesforceEmailServicesAddress sesa : response.getRecords()) {
             LOG.debug("EmailServicesAddress.EmailDomainName={}", sesa.getEmailDomainName());
             if (null != sesa.getEmailDomainName()) {
                 return String.format("emailtosalesforce@%s", sesa.getEmailDomainName());
@@ -108,12 +110,12 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding
     public SalesforceProfile getUserProfile(String userId) {
         final String url = String.format("%s/services/data/%s/chatter/users/{id}", instanceUrl, VERSION);
         SalesforceProfile profile = getRestTemplate().getForObject(url, SalesforceProfile.class, userId);
-        
+
         return profile;
     }
 
     public void setInstanceUrl(String instanceUrl) {
         this.instanceUrl = instanceUrl;
     }
-    
+
 }
