@@ -8,7 +8,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- *
+ * 
  * @author sosandstrom
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,6 +17,15 @@ public class SalesforceContact extends SalesforceObject {
     private String name;
     private String firstName;
     private String lastName;
+    private String phone;
+    private String mobilePhone;
+
+    // Address information
+    private String mailingStreet;
+    private String mailingCity;
+    private String mailingState;
+    private String mailingPostalCode;
+    private String mailingCountry;
 
     public String getEmail() {
         return email;
@@ -52,5 +61,68 @@ public class SalesforceContact extends SalesforceObject {
     @JsonProperty("LastName")
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getMailingStreet() {
+        return mailingStreet;
+    }
+
+    @JsonProperty("MailingStreet")
+    public void setMailingStreet(String mailingStreet) {
+        this.mailingStreet = mailingStreet;
+    }
+
+    public String getMailingCity() {
+        return mailingCity;
+    }
+
+    @JsonProperty("MailingCity")
+    public void setMailingCity(String mailingCity) {
+        this.mailingCity = mailingCity;
+    }
+
+    public String getMailingState() {
+        return mailingState;
+    }
+
+    @JsonProperty("MailingState")
+    public void setMailingState(String mailingState) {
+        this.mailingState = mailingState;
+    }
+
+    public String getMailingPostalCode() {
+        return mailingPostalCode;
+    }
+
+    @JsonProperty("MailingPostalCode")
+    public void setMailingPostalCode(String mailingPostalCode) {
+        this.mailingPostalCode = mailingPostalCode;
+    }
+
+    public String getMailingCountry() {
+        return mailingCountry;
+    }
+
+    @JsonProperty("MailingCountry")
+    public void setMailingCountry(String mailingCountry) {
+        this.mailingCountry = mailingCountry;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    @JsonProperty("Phone")
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    @JsonProperty("MobilePhone")
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 }
