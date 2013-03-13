@@ -46,14 +46,17 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
 
     public SalesforceTemplate(final String accessToken, String instanceUrl) {
         super(accessToken);
-        setRequestFactory(new SimpleClientHttpRequestFactory() {
+        final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory() {
             @Override
             protected void prepareConnection(HttpURLConnection connection, String httpMethod) throws IOException {
                 super.prepareConnection(connection, httpMethod);
                 connection.setRequestProperty("Authorization", String.format("OAuth %s", accessToken));
                 LOG.debug("Authorization: OAuth {}", accessToken);
             }
-        });
+        };
+        requestFactory.setConnectTimeout(15000);
+        requestFactory.setReadTimeout(15000);
+        setRequestFactory(requestFactory);
         this.instanceUrl = instanceUrl;
     }
 
