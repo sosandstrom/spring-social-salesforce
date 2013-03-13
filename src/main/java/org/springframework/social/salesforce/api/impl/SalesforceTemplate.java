@@ -87,7 +87,7 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
         SalesforceProfile me = getUserProfile();
         final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
         String soql = String
-                .format("SELECT Id,EmailDomainName FROM EmailServicesAddress WHERE LocalPart='emailtosalesforce' AND AuthorizedSenders LIKE ='%s%s%s'",
+                .format("SELECT Id,EmailDomainName FROM EmailServicesAddress WHERE LocalPart='emailtosalesforce' AND AuthorizedSenders LIKE '%s%s%s'",
                         "%", me.getEmail(), "%");
         LOG.debug("Email: {}, SOQL: {}", me.getEmail(), soql);
         QueryEmailServicesAddressResponse response = getRestTemplate().getForObject(url, QueryEmailServicesAddressResponse.class,
