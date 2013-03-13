@@ -73,9 +73,10 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
     @Override
     public Iterable<SalesforceContact> getContacts(int pageSize, String cursorKey) {
         final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
+        final String escapedCursorKey = null != cursorKey ? cursorKey.replaceAll("'", "\\'") : null;
         String soql = String.format("SELECT %s FROM Contact %s ORDER BY Name LIMIT %d", 
                 FIELDS_CONTACT, 
-                null != cursorKey ? String.format("WHERE Name >= '%s'", cursorKey) : "",
+                null != cursorKey ? String.format("WHERE Name >= '%s'", escapedCursorKey) : "",
                 pageSize);
         LOG.debug("SOQL: {}", soql);
         QueryContactsResponse response = getRestTemplate().getForObject(url, QueryContactsResponse.class, soql);
