@@ -15,6 +15,11 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SalesforceAccount extends SalesforceObject {
     private String Name;
     private String Phone;
+    private String BillingCity;
+    private String BillingCountry;
+    private String BillingPostalCode;
+    private String BillingState;
+    private String BillingStreet;
     private String ShippingCity;
     private String ShippingCountry;
     private String ShippingPostalCode;
@@ -82,6 +87,51 @@ public class SalesforceAccount extends SalesforceObject {
     @JsonProperty("ShippingState")
     public void setShippingState(String ShippingState) {
         this.ShippingState = ShippingState;
+    }
+
+    public String getBillingCity() {
+        return BillingCity;
+    }
+
+    @JsonProperty("BillingCity")
+    public void setBillingCity(String BillingCity) {
+        this.BillingCity = BillingCity;
+    }
+
+    public String getBillingCountry() {
+        return BillingCountry;
+    }
+
+    @JsonProperty("BillingCountry")
+    public void setBillingCountry(String BillingCountry) {
+        this.BillingCountry = BillingCountry;
+    }
+
+    public String getBillingPostalCode() {
+        return BillingPostalCode;
+    }
+
+    @JsonProperty("BillingPostalCode")
+    public void setBillingPostalCode(String BillingPostalCode) {
+        this.BillingPostalCode = BillingPostalCode;
+    }
+
+    public String getBillingState() {
+        return BillingState;
+    }
+
+    @JsonProperty("BillingState")
+    public void setBillingState(String BillingState) {
+        this.BillingState = BillingState;
+    }
+
+    public String getBillingStreet() {
+        return BillingStreet;
+    }
+
+    @JsonProperty("BillingStreet")
+    public void setBillingStreet(String BillingStreet) {
+        this.BillingStreet = BillingStreet;
     }
     
     
