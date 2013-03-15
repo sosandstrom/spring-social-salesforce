@@ -28,6 +28,8 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
     public static final String  VERSION          = VERSION_24;
 
     private static final String INSTANCE_URL_NA1 = "https://na1.salesforce.com";
+    public static final String KIND_ACCOUNT = "Account";
+    public static final String KIND_CONTACT = "Contact";
     protected final String      FIELDS_CONTACT   = "Id,Email,Name,FirstName,LastName,Phone,MobilePhone,MailingStreet,MailingCity,MailingState,MailingPostalCode,MailingCountry";
     protected final String      FIELDS_ACCOUNT   = "Id,Name,Phone,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,ShippingCity,ShippingCountry,ShippingPostalCode,ShippingState,ShippingStreet";
 
@@ -63,11 +65,11 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
     @Override
     public Iterable<SalesforceAccount> getAccounts(int pageSize, String cursorKey) {
         final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
-        int offset = null != cursorKey ? Integer.parseInt(cursorKey) : 0;
-        String soql = String.format("SELECT %s FROM Account ORDER BY Name LIMIT %d", FIELDS_ACCOUNT, pageSize);
-        if (0 < offset) {
-            soql = String.format("%s OFFSET %d", soql, offset);
-        }
+        final String escapedCursorKey = escape(cursorKey);
+        String soql = String.format("SELECT %s FROM Account %s ORDER BY Name LIMIT %d", 
+                FIELDS_ACCOUNT, 
+                null != cursorKey ? String.format("WHERE Name >= '%s'", escapedCursorKey) : "",
+                pageSize);
         LOG.debug("SOQL: {}", soql);
         QueryAccountsResponse response = getRestTemplate().getForObject(url, QueryAccountsResponse.class, soql);
         return response.getRecords();
@@ -95,7 +97,7 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
                 FIELDS_CONTACT, 
                 null != cursorKey ? String.format("WHERE Name >= '%s'", escapedCursorKey) : "",
                 pageSize);
-        LOG.debug("escaped: \"{}\", SOQL: {}", escapedCursorKey, soql);
+        LOG.debug("SOQL: {}", soql);
         QueryContactsResponse response = getRestTemplate().getForObject(url, QueryContactsResponse.class, soql);
         return response.getRecords();
     }
@@ -129,6 +131,24 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
         SalesforceProfile profile = getRestTemplate().getForObject(url, SalesforceProfile.class, userId);
 
         return profile;
+    }
+
+    @Override
+    public int getAccountCount() {
+        return getCount(KIND_ACCOUNT);
+    }
+
+    @Override
+    public int getContactCount() {
+        return getCount(KIND_CONTACT);
+    }
+    
+    protected int getCount(String kind) {
+        final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
+        String soql = String.format("SELECT count() FROM %s", kind);
+        QueryCountResponse count = getRestTemplate().getForObject(url, QueryCountResponse.class, soql);
+        LOG.debug("count() {}: {}", kind, count.getTotalSize());
+        return count.getTotalSize();
     }
 
     public void setInstanceUrl(String instanceUrl) {

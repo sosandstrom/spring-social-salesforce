@@ -17,4 +17,8 @@ public interface BasicOperations {
     SalesforceProfile getUserProfile();
 
     String getEmail2SalesforceAddress();
+
+    int getAccountCount();
+
+    int getContactCount();
 }
