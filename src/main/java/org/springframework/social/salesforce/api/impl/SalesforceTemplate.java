@@ -72,16 +72,30 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
         QueryAccountsResponse response = getRestTemplate().getForObject(url, QueryAccountsResponse.class, soql);
         return response.getRecords();
     }
+    
+    public static final String escape(String s) {
+        if (null == s) {
+            return null;
+        }
+        StringBuffer sb = new StringBuffer(s);
+        
+        int beginIndex = -2;
+        while (-1 < (beginIndex = sb.indexOf("'", beginIndex+2))) {
+            sb.insert(beginIndex, '\\');
+        }
+        
+        return sb.toString();
+    }
 
     @Override
     public Iterable<SalesforceContact> getContacts(int pageSize, String cursorKey) {
         final String url = String.format("%s/services/data/%s/query/?q={soql}", instanceUrl, VERSION);
-        final String escapedCursorKey = null != cursorKey ? cursorKey.replaceAll("'", "\\'") : null;
+        final String escapedCursorKey = escape(cursorKey);
         String soql = String.format("SELECT %s FROM Contact %s ORDER BY Name LIMIT %d", 
                 FIELDS_CONTACT, 
                 null != cursorKey ? String.format("WHERE Name >= '%s'", escapedCursorKey) : "",
                 pageSize);
-        LOG.debug("SOQL: {}", soql);
+        LOG.debug("escaped: \"{}\", SOQL: {}", escapedCursorKey, soql);
         QueryContactsResponse response = getRestTemplate().getForObject(url, QueryContactsResponse.class, soql);
         return response.getRecords();
     }
