@@ -1,12 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.springframework.social</groupId>
+    <parent>
+        <groupId>com.goldengekko</groupId>
+        <artifactId>parent-jar</artifactId>
+        <version>1.10</version>
+    </parent>
+    <groupId>com.goldengekko.social</groupId>
     <artifactId>spring-social-salesforce</artifactId>
     <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>open spring-social-salesforce</name>
+    <name>Gekko Open spring-social-salesforce</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -49,6 +53,14 @@
     </dependencies>
 
     <build>
+        <extensions>  
+            <extension>  
+                <groupId>org.springframework.build</groupId>
+                <artifactId>aws-maven</artifactId>
+                <version>4.4.0.RELEASE</version>
+            </extension>  
+        </extensions> 
+        
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -63,6 +75,14 @@
     </build>
 
     <repositories>
+         <repository>
+             <id>gg-s3-release</id>
+             <name>Gekko S3 Maven Release Repository</name>
+             <url>s3://gg-maven-repo/release</url>
+             <releases><enabled>true</enabled></releases>
+             <snapshots><enabled>false</enabled></snapshots>
+         </repository>
+
          <repository>
              <id>org.springframework.maven.release</id>
              <name>Spring Maven Release Repository</name>
@@ -88,7 +108,8 @@
     </repositories>
 
     <scm>
-        <url>https://github.com/sosandstrom/spring-social-salesforce</url>
-        <developerConnection>scm:git:ssh://git@github.com/sosandstrom/spring-social-salesforce.git</developerConnection>
+        <url>https://github.com/goldengekko/spring-social-salesforce</url>
+        <developerConnection>scm:git:ssh://git@github.com/goldengekko/spring-social-salesforce.git</developerConnection>
     </scm>
+    
 </project>
