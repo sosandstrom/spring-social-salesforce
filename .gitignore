@@ -5,3 +5,5 @@ target/
 *.releaseBackup
 release.properties
 
+.idea
+spring-social-salesforce.iml
