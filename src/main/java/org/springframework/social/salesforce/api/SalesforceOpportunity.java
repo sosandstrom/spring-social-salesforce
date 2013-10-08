@@ -18,7 +18,7 @@ public class SalesforceOpportunity extends SalesforceObject {
     private String name;
     private String description;
     private String closeDate;
-    private Boolean isClosed;
+    private String isClosed;
 
     public String getCloseDate() {
         return closeDate;
@@ -38,12 +38,13 @@ public class SalesforceOpportunity extends SalesforceObject {
         this.description = description;
     }
 
-    public Boolean getIsClosed() {
+
+    public String getIsClosed() {
         return isClosed;
     }
 
-    @JsonProperty("IsClose")
-    public void setIsClosed(Boolean closed) {
+    @JsonProperty("IsClosed")
+    public void setIsClosed(String closed) {
         isClosed = closed;
     }
 
@@ -54,5 +55,9 @@ public class SalesforceOpportunity extends SalesforceObject {
     @JsonProperty("Name")
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String toString() {
+        return String.format("Opportunity name: %s description: %s close date: %s isClosed: %s", name, description, closeDate, isClosed);
     }
 }
