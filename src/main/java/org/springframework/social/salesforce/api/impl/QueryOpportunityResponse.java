@@ -6,7 +6,7 @@ import org.springframework.social.salesforce.api.SalesforceOpportunity;
 import java.util.Collection;
 
 /**
- * Rest template repsonse containing a list of Salesforce Opportunities
+ * Rest template response containing a list of Salesforce Opportunities
  * @author mattiaslevin
  */
 public class QueryOpportunityResponse {
