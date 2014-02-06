@@ -4,19 +4,18 @@
 
 package org.springframework.social.salesforce.api.impl;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import org.springframework.social.salesforce.api.*;
+import org.springframework.web.client.ResponseErrorHandler;
 
-import javax.swing.text.DateFormatter;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 
@@ -38,6 +37,9 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
 
     private String              instanceUrl;
 
+    // Expose the ability to set a custom error handler that will map http error codes to exceptions
+    private static ResponseErrorHandler responseErrorHandler;
+
     @Override
     public BasicOperations basicOperations() {
         return this;
@@ -49,6 +51,7 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
 
     public SalesforceTemplate(final String accessToken, String instanceUrl) {
         super(accessToken);
+
         final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory() {
             @Override
             protected void prepareConnection(HttpURLConnection connection, String httpMethod) throws IOException {
@@ -60,7 +63,14 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
         requestFactory.setConnectTimeout(15000);
         requestFactory.setReadTimeout(15000);
         setRequestFactory(requestFactory);
+
         this.instanceUrl = instanceUrl;
+
+        if (null != responseErrorHandler) {
+            LOG.debug("Configure custom Salesforce error handler");
+            getRestTemplate().setErrorHandler(responseErrorHandler);
+        }
+
     }
 
     @Override
@@ -180,6 +190,7 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
 
     public SalesforceProfile getUserProfile(String userId) {
         final String url = String.format("%s/services/data/%s/chatter/users/{id}", instanceUrl, VERSION);
+        LOG.debug("Url {}", url);
         SalesforceProfile profile = getRestTemplate().getForObject(url, SalesforceProfile.class, userId);
 
         return profile;
@@ -206,5 +217,11 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
     public void setInstanceUrl(String instanceUrl) {
         this.instanceUrl = instanceUrl;
     }
+
+    public static void setResponseErrorHandler(ResponseErrorHandler responseErrorHandler) {
+        LOG.debug("Set Salesforce response error handler");
+        SalesforceTemplate.responseErrorHandler = responseErrorHandler;
+    }
+
 
 }
