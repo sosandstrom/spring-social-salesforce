@@ -29,7 +29,7 @@ public class SalesforceTemplate extends AbstractOAuth2ApiBinding implements Sale
     private static final String INSTANCE_URL_NA1 = "https://na1.salesforce.com";
     public static final String KIND_ACCOUNT = "Account";
     public static final String KIND_CONTACT = "Contact";
-    protected final String      FIELDS_CONTACT   = "Id,Email,Name,FirstName,LastName,Phone,MobilePhone,MailingStreet,MailingCity,MailingState,MailingPostalCode,MailingCountry";
+    protected final String      FIELDS_CONTACT   = "Id,AccountId,Email,Name,FirstName,LastName,Phone,MobilePhone,MailingStreet,MailingCity,MailingState,MailingPostalCode,MailingCountry";
     protected final String      FIELDS_ACCOUNT   = "Id,Name,Phone,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,ShippingCity,ShippingCountry,ShippingPostalCode,ShippingState,ShippingStreet";
     protected final String      FIELDS_OPPORTUNITY = "Id,Name,Description,CloseDate,IsClosed";
 

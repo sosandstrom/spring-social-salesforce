@@ -13,6 +13,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesforceContact extends SalesforceObject {
+
+    // The account this contact belong to
+    // Applications can use this information to create features that require a relation between the contact and acccount.
+    private String accountId;
+
+    // Personal info
     private String email;
     private String name;
     private String firstName;
@@ -26,6 +32,15 @@ public class SalesforceContact extends SalesforceObject {
     private String mailingState;
     private String mailingPostalCode;
     private String mailingCountry;
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    @JsonProperty("AccountId")
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
     public String getEmail() {
         return email;
